@@ -1,0 +1,236 @@
+Program
+BinOp	!=	!=
+BinOp	&&	&&
+BinOp	*	*
+BinOp	+	+
+BinOp	-	-
+BinOp	/	/
+BinOp	<	<
+BinOp	<=	<=
+BinOp	==	==
+BinOp	>	>
+BinOp	>=	>=
+BinOp	||	||
+
+Block	{	{ VarDeclList StmtList }
+
+Decl	(	FunDecl
+Decl	;	VarDecl'
+Decl	[	VarDecl'
+
+DeclList	$	epsilon
+DeclList	char	DeclList' DeclList
+DeclList	double	DeclList' DeclList
+DeclList	float	DeclList' DeclList
+DeclList	int	DeclList' DeclList
+
+DeclList'	char	Type id Decl
+DeclList'	double	Type id Decl
+DeclList'	float	Type id Decl
+DeclList'	int	Type id Decl
+
+ElseClause	!	epsilon
+ElseClause	(	epsilon
+ElseClause	-	epsilon
+ElseClause	;	epsilon
+ElseClause	break	epsilon
+ElseClause	else	else Stmt
+ElseClause	id	epsilon
+ElseClause	if	epsilon
+ElseClause	num	epsilon
+ElseClause	print	epsilon
+ElseClause	return	epsilon
+ElseClause	while	epsilon
+ElseClause	{	epsilon
+ElseClause	}	epsilon
+
+Expr	!	UnaryOp Expr
+Expr	(	( ExprHelper ) Expr'
+Expr	-	UnaryOp Expr
+Expr	id	id ExprIdTail
+Expr	num	num Expr'
+
+Expr'	!=	BinOp Expr
+Expr'	&&	BinOp Expr
+Expr'	)	epsilon
+Expr'	*	BinOp Expr
+Expr'	+	BinOp Expr
+Expr'	,	epsilon
+Expr'	-	BinOp Expr
+Expr'	/	BinOp Expr
+Expr'	;	epsilon
+Expr'	<	BinOp Expr
+Expr'	<=	BinOp Expr
+Expr'	==	BinOp Expr
+Expr'	>	BinOp Expr
+Expr'	>=	BinOp Expr
+Expr'	]	epsilon
+Expr'	||	BinOp Expr
+
+ExprArrayTail	!=	Expr'
+ExprArrayTail	&&	Expr'
+ExprArrayTail	)	epsilon
+ExprArrayTail	*	Expr'
+ExprArrayTail	+	Expr'
+ExprArrayTail	,	epsilon
+ExprArrayTail	-	Expr'
+ExprArrayTail	/	Expr'
+ExprArrayTail	;	epsilon
+ExprArrayTail	<	Expr'
+ExprArrayTail	<=	Expr'
+ExprArrayTail	=	= Expr
+ExprArrayTail	==	Expr'
+ExprArrayTail	>	Expr'
+ExprArrayTail	>=	Expr'
+ExprArrayTail	]	epsilon
+ExprArrayTail	||	Expr'
+
+ExprHelper	!	Expr
+ExprHelper	(	Expr
+ExprHelper	-	Expr
+ExprHelper	id	Expr
+ExprHelper	num	Expr
+
+ExprIdTail	!=	Expr'
+ExprIdTail	&&	Expr'
+ExprIdTail	(	( ExprList ) Expr'
+ExprIdTail	)	epsilon
+ExprIdTail	*	Expr'
+ExprIdTail	+	Expr'
+ExprIdTail	,	epsilon
+ExprIdTail	-	Expr'
+ExprIdTail	/	Expr'
+ExprIdTail	;	epsilon
+ExprIdTail	<	Expr'
+ExprIdTail	<=	Expr'
+ExprIdTail	=	= Expr
+ExprIdTail	==	Expr'
+ExprIdTail	>	Expr'
+ExprIdTail	>=	Expr'
+ExprIdTail	[	[ ExprHelper ] ExprArrayTail
+ExprIdTail	]	epsilon
+ExprIdTail	||	Expr'
+
+ExprList	!	ExprListTail
+ExprList	(	ExprListTail
+ExprList	)	epsilon
+ExprList	-	ExprListTail
+ExprList	id	ExprListTail
+ExprList	num	ExprListTail
+
+ExprListTail	!	ExprHelper ExprListTail'
+ExprListTail	(	ExprHelper ExprListTail'
+ExprListTail	-	ExprHelper ExprListTail'
+ExprListTail	id	ExprHelper ExprListTail'
+ExprListTail	num	ExprHelper ExprListTail'
+
+ExprListTail'	)	epsilon
+ExprListTail'	,	, ExprListTail
+
+FunDecl	(	( ParamDeclList ) FunDecl'
+
+FunDecl'	;	;
+FunDecl'	{	Block
+
+ParamDecl	char	Type id ParamDecl'
+ParamDecl	double	Type id ParamDecl'
+ParamDecl	float	Type id ParamDecl'
+ParamDecl	int	Type id ParamDecl'
+
+ParamDecl'	)	epsilon
+ParamDecl'	,	epsilon
+ParamDecl'	[	[ ]
+
+ParamDeclList	)	epsilon
+ParamDeclList	char	ParamDeclListTail
+ParamDeclList	double	ParamDeclListTail
+ParamDeclList	float	ParamDeclListTail
+ParamDeclList	int	ParamDeclListTail
+
+ParamDeclListTail	char	ParamDecl ParamDeclListTail'
+ParamDeclListTail	double	ParamDecl ParamDeclListTail'
+ParamDeclListTail	float	ParamDecl ParamDeclListTail'
+ParamDeclListTail	int	ParamDecl ParamDeclListTail'
+
+ParamDeclListTail'	)	epsilon
+ParamDeclListTail'	,	, ParamDeclListTail
+
+Program	$	epsilon
+Program	char	DeclList
+Program	double	DeclList
+Program	float	DeclList
+Program	int	DeclList
+
+Stmt	!	ExprHelper ;
+Stmt	(	ExprHelper ;
+Stmt	-	ExprHelper ;
+Stmt	;	;
+Stmt	break	break ;
+Stmt	id	ExprHelper ;
+Stmt	if	if ( ExprHelper ) Stmt ElseClause
+Stmt	num	ExprHelper ;
+Stmt	print	print ( ExprHelper ) ; 
+Stmt	return	return ExprHelper ;
+Stmt	while	while ( ExprHelper ) Stmt
+Stmt	{	Block
+
+StmtList	!	Stmt StmtList'
+StmtList	(	Stmt StmtList'
+StmtList	-	Stmt StmtList'
+StmtList	;	Stmt StmtList'
+StmtList	break	Stmt StmtList'
+StmtList	id	Stmt StmtList'
+StmtList	if	Stmt StmtList'
+StmtList	num	Stmt StmtList'
+StmtList	print	Stmt StmtList'
+StmtList	return	Stmt StmtList'
+StmtList	while	Stmt StmtList'
+StmtList	{	Stmt StmtList'
+
+StmtList'	!	StmtList
+StmtList'	(	StmtList
+StmtList'	-	StmtList
+StmtList'	;	StmtList
+StmtList'	break	StmtList
+StmtList'	id	StmtList
+StmtList'	if	StmtList
+StmtList'	num	StmtList
+StmtList'	print	StmtList
+StmtList'	return	StmtList
+StmtList'	while	StmtList
+StmtList'	{	StmtList
+StmtList'	}	epsilon
+
+Type	char	char
+Type	double	double
+Type	float	float
+Type	int	int
+
+UnaryOp	!	!
+UnaryOp	-	-
+
+VarDecl	char	Type id VarDecl'
+VarDecl	double	Type id VarDecl'
+VarDecl	float	Type id VarDecl'
+VarDecl	int	Type id VarDecl'
+
+VarDecl'	;	;
+VarDecl'	[	[ num ] ;
+
+VarDeclList	!	epsilon
+VarDeclList	(	epsilon
+VarDeclList	-	epsilon
+VarDeclList	;	epsilon
+VarDeclList	break	epsilon
+VarDeclList	char	VarDecl VarDeclList
+VarDeclList	double	VarDecl VarDeclList
+VarDeclList	float	VarDecl VarDeclList
+VarDeclList	id	epsilon
+VarDeclList	if	epsilon
+VarDeclList	int	VarDecl VarDeclList
+VarDeclList	num	epsilon
+VarDeclList	print	epsilon
+VarDeclList	return	epsilon
+VarDeclList	while	epsilon
+VarDeclList	{	epsilon
+

@@ -1,0 +1,102 @@
+Program
+	DeclList
+DeclList
+	DeclList' DeclList
+	epsilon
+DeclList'
+	Type id Decl
+Decl
+	VarDecl'
+	FunDecl
+VarDecl
+	Type id VarDecl'
+VarDecl'
+	;
+	[ num ] ;
+FunDecl
+	( ParamDeclList ) FunDecl'
+FunDecl'
+	Block
+	;
+VarDeclList
+	VarDecl VarDeclList
+	epsilon
+ParamDeclList
+	ParamDeclListTail
+	epsilon
+ParamDeclListTail
+	ParamDecl ParamDeclListTail'
+ParamDeclListTail'
+	, ParamDeclListTail
+	epsilon
+ParamDecl
+	Type id ParamDecl'
+ParamDecl'
+	[ ]
+	epsilon
+Block
+	{ VarDeclList StmtList }
+Type
+	int
+	char
+	double
+	float
+StmtList
+	Stmt StmtList'
+StmtList'
+	StmtList
+	epsilon
+Stmt
+	;
+	ExprHelper ;
+	return ExprHelper ;
+	break ;
+	if ( ExprHelper ) Stmt ElseClause
+	while ( ExprHelper ) Stmt
+	Block
+	print ( ExprHelper ) ; 
+ElseClause
+	else Stmt
+	epsilon
+Expr
+	UnaryOp Expr
+	num Expr'
+	( ExprHelper ) Expr'
+	id ExprIdTail
+ExprHelper
+	Expr
+ExprIdTail
+	Expr'
+	( ExprList ) Expr'
+	[ ExprHelper ] ExprArrayTail
+	= Expr
+ExprArrayTail
+	Expr'
+	= Expr
+Expr'
+	BinOp Expr
+	epsilon
+ExprList
+	ExprListTail
+	epsilon
+ExprListTail
+	ExprHelper ExprListTail'
+ExprListTail'
+	, ExprListTail
+	epsilon
+UnaryOp
+	-
+	!
+BinOp
+	+
+	-
+	*
+	/
+	==
+	!=
+	<
+	<=
+	>
+	>=
+	&&
+	||
